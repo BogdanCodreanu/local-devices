@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import wol from 'wake_on_lan';
 
-export async function POST(request: Request) {
+export async function POST(request: Request): Promise<NextResponse> {
   try {
     const { mac, ip } = await request.json();
 
@@ -14,7 +14,7 @@ export async function POST(request: Request) {
 
     const options = ip ? { address: ip } : {};
 
-    return new Promise((resolve) => {
+    return new Promise<NextResponse>((resolve) => {
       wol.wake(mac, options, (error: Error | null) => {
         if (error) {
           console.error('Wake-on-LAN error:', error);

@@ -17,7 +17,6 @@ export default function Home() {
   const [devices, setDevices] = useState<Device[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const [lastGlobalCheck, setLastGlobalCheck] = useState<string>('');
 
   const fetchDeviceStatus = async (showRefreshing = true) => {
     if (showRefreshing) setRefreshing(true);
@@ -26,7 +25,6 @@ export default function Home() {
       if (response.ok) {
         const data = await response.json();
         setDevices(data);
-        setLastGlobalCheck(new Date().toISOString());
         setLoading(false);
       } else {
         console.error('Health check failed with status:', response.status);
@@ -78,12 +76,6 @@ export default function Home() {
     return date.toLocaleTimeString();
   };
 
-  const formatGlobalLastChecked = (dateString: string) => {
-    if (!dateString) return 'Never';
-    const date = new Date(dateString);
-    return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
-  };
-
   return (
     <div className="min-h-screen p-8 bg-gray-50 dark:bg-gray-900">
       <main className="max-w-4xl mx-auto">
@@ -123,7 +115,7 @@ export default function Home() {
               {refreshing && (
                 <div className="inline-block animate-spin rounded-full h-4 w-4 border-b-2 border-gray-600 dark:border-gray-400"></div>
               )}
-              Last global check: {formatGlobalLastChecked(lastGlobalCheck)} • Auto-refresh every {REFRESH_INTERVAL / 1000} seconds
+              Auto-refresh every {REFRESH_INTERVAL / 1000} seconds
               {refreshing && <span className="text-blue-600 dark:text-blue-400 font-medium">Checking...</span>}
             </div>
             <div className="grid gap-4">
@@ -137,10 +129,7 @@ export default function Home() {
                       {device.name}
                     </h2>
                     <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                      IP: {device.localIp}
-                    </p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      MAC: {device.mac}
+                      {device.localIp}
                     </p>
                     {device.responseTime && device.isAlive && (
                       <p className="text-sm text-gray-600 dark:text-gray-400">

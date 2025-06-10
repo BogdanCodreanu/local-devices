@@ -11,7 +11,7 @@ interface Device {
   lastChecked?: string;
 }
 
-const REFRESH_INTERVAL = 4000;
+const REFRESH_INTERVAL = 1000 * 60;
 
 export default function Home() {
   const [devices, setDevices] = useState<Device[]>([]);
